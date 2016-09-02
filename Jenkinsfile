@@ -1,9 +1,13 @@
 def user = "pivotalservices"
 def cfUser = "${cf_username}"
 def cfPassword = "${cf_password}"
-// def cfOrg = "${cf_org}"
+def cfUrl =  "${cf_api}"
+def cfOrg = "${cf_org}"
+def cfSpace = "${cf_space}"
+
 def sonarUrl = "${sonar_url}"
 def nexusUrl = "${nexus_url}"
+
 // def registry = "localhost:5000"
 def flow
 
@@ -21,16 +25,18 @@ node {
 	flow.clean_test()
 }
 
-stage 'publish-sonar-results'
-node {
-	flow.sonar(sonarUrl)
-}
+// disable sonar for now
+
+// stage 'publish-sonar-results'
+// node {
+//	flow.sonar(sonarUrl)
+// }
 
 stage 'deploy-to-development'
 node {
 	git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'jenkins'])
 	flow = load 'ci/pipeline.groovy'
-	flow.push('api.run.pez.pivotal.io', "${cfUser}", "${cfPassword}", 'pivot-bkunjummen', 'development', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
+	flow.push('${cfUrl}', "${cfUser}", "${cfPassword}", '${cfOrg}', '${cfSpace}', 'cfapps.pez.pivotal.io', 'sample-spring-cloud-svc-ci-dev')
 }
 
 stage 'run-tests-on-dev'
