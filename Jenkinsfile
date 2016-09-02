@@ -39,7 +39,7 @@ stage 'deploy-to-development'
 node {
 	git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'jenkins'])
 	flow = load 'ci/pipeline.groovy'
-	flow.push('${cfUrl}', "${cfUser}", "${cfPassword}", '${cfOrg}', '${cfSpace}', '${cfDomain}', '${cfAppName}')
+	flow.push("${cfUrl}", "${cfUser}", "${cfPassword}", "${cfOrg}", "${cfSpace}", "${cfDomain}", "${cfAppName}")
 }
 
 stage 'run-tests-on-dev'
@@ -48,14 +48,14 @@ parallel(
 		node {
 			git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'jenkins'])
 			flow = load 'ci/pipeline.groovy'
-			flow.runSmokeTests('${cfUrl}', "${cfUser}", "${cfPassword}", '${cfOrg}', '${cfSpace}', '${cfDomain}', '${cfAppName}')
+			flow.runSmokeTests("${cfUrl}", "${cfUser}", "${cfPassword}", "${cfOrg}", "${cfSpace}", "${cfDomain}", "${cfAppName}")
 		}
 	},
 	acceptanceTests: {
 		node {
 			git([url: "https://github.com/${user}/sample-spring-cloud-svc-ci.git", branch: 'jenkins'])
 			flow = load 'ci/pipeline.groovy'
-			flow.runAcceptanceTests('${cfUrl}', "${cfUser}", "${cfPassword}", '${cfOrg}', '${cfSpace}', '${cfDomain}', '${cfAppName}')
+			flow.runAcceptanceTests("${cfUrl}", "${cfUser}", "${cfPassword}", "${cfOrg}", "${cfSpace}", "${cfDomain}", "${cfAppName}")
 		}
 	}
 )
